@@ -1,0 +1,32 @@
+name: Build and Package APK
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up JDK
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'adopt'
+        java-version: '11'
+
+    - name: Build with Gradle
+      run: ./gradlew build
+
+    - name: Package APK
+      run: ./gradlew bundleRelease
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v2
+      with:
+        name: app-release
+        path: app/build/outputs/bundle/release/
